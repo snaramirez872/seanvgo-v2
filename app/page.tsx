@@ -3,6 +3,7 @@
 import { useAuth } from "@/hooks/useAuth";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
+import Games from "./components/Games";
 
 export default function Home() {
   const { user, loading } = useAuth();
@@ -19,6 +20,7 @@ export default function Home() {
   return (
     <div className="flex items-center justify-center">
       <h1 className="text-3xl font-bold">Hello World</h1>
+      <Games />
     </div>
   );
 }
