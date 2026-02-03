@@ -10,15 +10,7 @@ TODO
 
 import { useEffect, useState } from "react";
 import { supabase } from "@/lib/supabaseClient";
-
-type Game = {
-    id: number,
-    created_at: Date,
-    title: string,
-    publisher: string[],
-    developer: string[],
-    platform: string[],
-}
+import { Game } from "@/lib/types/types";
 
 export function useGames() {
     const [games, setGames] = useState<Game[]>([]);
