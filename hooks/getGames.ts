@@ -1,11 +1,3 @@
-/*
-TODO
-- Finish writing hook for games list
-- Test hook with test data
-- If works, test with real data
-- Add it to home page and design data into a table
-*/
-
 "use client";
 
 import { useEffect, useState } from "react";
