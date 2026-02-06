@@ -57,12 +57,15 @@ export default function Analytics() {
         pubs, 
         devs, 
         plats,
+        genres,
         max_dev,
         max_pubs,
         max_plats,
+        max_genres,
         dev_perc,
         pub_perc,
-        plat_perc
+        plat_perc,
+        genres_perc
     } = analytics;
 
     return (
@@ -70,8 +73,9 @@ export default function Analytics() {
             <h1 className="text-3xl font-bold">Analytics</h1>
             <div>
                 <p><b>Total Games: </b>{gamesResp.count}</p>
-                <p>The Developer that you own the most games from is <span>{max_dev.key}</span> at <span>{max_dev.value}</span> owned games <span>({dev_perc}% of total)</span>.</p>
-                <p>The Publisher that you own the most games from is <span>{max_pubs.key}</span> at <span>{max_pubs.value}</span> owned games <span>({pub_perc}% of total)</span>.</p>
+                <p>The Developer that appears the most in your collection is <span>{max_dev.key}</span> at <span>{max_dev.value}</span> owned games <span>({dev_perc}% of total)</span>.</p>
+                <p>The Publisher that appears the most in your collection is <span>{max_pubs.key}</span> at <span>{max_pubs.value}</span> owned games <span>({pub_perc}% of total)</span>.</p>
+                <p>The Genre that appears the most in your collection is <span>{max_genres.key}</span> at <span>{max_genres.value}</span> owned games <span>({genres_perc}% of total)</span>.</p>
                 <p>The Platform that you own the most games on is <span>{max_plats.key}</span> at <span>{max_plats.value}</span> owned games <span>({plat_perc}% of total)</span>.</p>
             </div>
             <div className="flex">
@@ -106,6 +110,18 @@ export default function Analytics() {
                             {Object.entries(plats).map(([platform, count]) => (
                                 <li key={platform}>
                                     {platform} <b><i>({count})</i></b>
+                                </li>
+                            ))}
+                        </ul>
+                    </div>
+                </div>
+                <div>
+                    <h3>Genres</h3>
+                    <div>
+                        <ul>
+                            {Object.entries(genres).map(([genre, count]) => (
+                                <li key={genre}>
+                                    {genre} <b><i>({count})</i></b>
                                 </li>
                             ))}
                         </ul>

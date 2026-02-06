@@ -5,6 +5,7 @@ export type Game = {
     publisher: string[],
     developer: string[],
     platform: string[],
+    genres: string[];
 }
 
 export type GamesResponse = {

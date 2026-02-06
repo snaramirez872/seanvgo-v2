@@ -18,7 +18,8 @@ export default function Games() {
                 game.title,
                 game.developer,
                 game.publisher,
-                game.platform
+                game.platform,
+                game.genres
             ].join(" ").toLowerCase();
 
             return keywords.every(kw => searchableText.includes(kw));
@@ -68,10 +69,11 @@ export default function Games() {
             <table>
                 <thead>
                     <tr>
-                        <td>Title</td>
-                        <td>Developer</td>
-                        <td>Publisher</td>
-                        <td>Platform</td>
+                        <td>Titles</td>
+                        <td>Developers</td>
+                        <td>Publishers</td>
+                        <td>Platforms</td>
+                        <td>Genres</td>
                     </tr>
                 </thead>
                 <tbody>
@@ -86,6 +88,7 @@ export default function Games() {
                                 <td>{fg.developer}</td>
                                 <td>{fg.publisher}</td>
                                 <td>{fg.platform}</td>
+                                <td>{fg.genres}</td>
                             </tr>
                         ))
                     )}
