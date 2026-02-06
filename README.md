@@ -7,7 +7,7 @@ I *could* have just used many of the organizers that are already out there, but 
 ## Project Updates
 I post updates to my [LinkedIn](https://www.linkedin.com/in/seanaramirez/)! Feel free to star this repo as well to keep up.
 
-[Latest Update [February 2nd, 2026]](https://www.linkedin.com/posts/seanaramirez_personalprojects-webdevelopment-fullstackdevelopment-activity-7424595754415214593-wCPJ?utm_source=share&utm_medium=member_desktop&rcm=ACoAACxoAqQBwMbshtknYZpfYrGJcrMoyxndqfc)
+[Latest Update [February 5th, 2026]](https://www.linkedin.com/posts/seanaramirez_personalprojects-webdevelopment-fullstackdevelopment-activity-7425340511860871168-11LR?utm_source=share&utm_medium=member_desktop&rcm=ACoAACxoAqQBwMbshtknYZpfYrGJcrMoyxndqfc)
 
 ## Technologies Used
 ![](https://img.shields.io/badge/TypeScript-3178C6?style=for-the-badge&logo=typescript&logoColor=white)
