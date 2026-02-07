@@ -33,7 +33,7 @@ export default function Games() {
     if (loading) {
         return (
             <div>
-                <h1 className="text-3xl font-bold">Games</h1>
+                <h2 className="text-2xl font-bold">Games</h2>
                 <p>Loading...</p>
             </div>
         );
@@ -42,7 +42,7 @@ export default function Games() {
     if (error) {
         return (
             <div>
-                <h1 className="text-3xl font-bold">Games</h1>
+                <h2 className="text-2xl font-bold">Games</h2>
                 <p className="text-red-500">Error: {error}</p>
             </div>
         );
@@ -50,7 +50,7 @@ export default function Games() {
 
     return (
         <div>
-            <h1 className="text-3xl font-bold">Games</h1>
+            <h2 className="text-2xl font-bold">Games</h2>
             <div>
                 <input 
                     type="text"

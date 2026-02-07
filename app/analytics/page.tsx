@@ -23,7 +23,7 @@ export default function Analytics() {
     if (loading) {
         return (
             <div>
-                <h1>Analytics</h1>
+                <h2 className="text-2xl font-bold">Analytics</h2>
                 <div>
                     <p>Loading ...</p>
                 </div>
@@ -34,7 +34,7 @@ export default function Analytics() {
     if (error) {
         return (
             <div>
-                <h1>Analytics</h1>
+                <h2 className="text-2xl font-bold">Analytics</h2>
                 <div>
                     <p>Error: {error}</p>
                 </div>
@@ -45,7 +45,7 @@ export default function Analytics() {
     if (!analytics) {
         return (
             <div>
-                <h1>Analytics</h1>
+                <h2 className="text-2xl font-bold">Analytics</h2>
                 <div>
                     <p>No Data</p>
                 </div>
@@ -70,7 +70,7 @@ export default function Analytics() {
 
     return (
         <div>
-            <h1 className="text-3xl font-bold">Analytics</h1>
+            <h2 className="text-2xl font-bold">Analytics</h2>
             <div>
                 <p><b>Total Games: </b>{gamesResp.count}</p>
                 <p>The Developer that appears the most in your collection is <span>{max_dev.key}</span> at <span>{max_dev.value}</span> owned games <span>({dev_perc}% of total)</span>.</p>

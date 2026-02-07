@@ -30,31 +30,66 @@ export default function LoginPage() {
     }
 
     return (
-        <div>
-            <h1>Login</h1>
-            <form onSubmit={handleLogin}>
-                <input 
-                    type="email"
-                    placeholder="name@example.com"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    required
-                />
+        <div className="flex items-center justify-center px-4 sm:px-6 lg:px-8 min-h-[calc(100vh-4rem)]">
+            <div className="w-full max-w-md rounded-2xl bg-amber-50/70 backdrop-blur-md shadow-xl px-6 sm:px-8 py-8 sm:py-10">
+                <h2 className="text-2xl sm:text-3xl font-semibold text-gray-900 text-center">
+                    Welcome Back
+                </h2>
+                <p className="text-sm sm:text-base text-gray-600 text-center mt-1">
+                    Sign in to continue
+                </p>
+                <form onSubmit={handleLogin} className="mt-8 space-y-6">
+                    <div className="flex flex-col gap-4">
+                        <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-1">
+                                Email
+                            </label>
+                            <input 
+                                type="email"
+                                value={email}
+                                onChange={(e) => setEmail(e.target.value)}
+                                required
+                                className="w-full rounded-lg bg-white px-4 py-2.5 text-gray-900
+                                       focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500
+                                       transition"
+                            />
+                        </div>
+                        <div className="mt-6">
+                            <label className="block text-sm font-medium text-gray-700 mb-1">
+                                Password
+                            </label>
+                            <input
+                                type="password"
+                                value={password}
+                                onChange={(e) => setPassword(e.target.value)}
+                                required
+                                className="w-full rounded-lg bg-white px-4 py-2.5 text-gray-900
+                                       focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500
+                                       transition"
+                            />
+                        </div>
+                    </div>
+                    
+                    {error && (
+                        <p className="text-sm text-red-600 text-center animate-fade-in">
+                            {error}
+                        </p>
+                    )}
 
-                <input
-                  type="password"
-                  placeholder="Password"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  required
-                />
+                    <button 
+                        type="submit" 
+                        disabled={loading}
+                        className="w-full cursor-pointer rounded-xl bg-indigo-600 py-2.5 text-white font-medium
+                                   transition-all duration-200
+                                   hover:bg-indigo-700 hover:scale-[1.02]
+                                   active:scale-[0.98]
+                                   disabled:opacity-50 disabled:cursor-not-allowed"
+                    >
+                        {loading ? "Signing In..." : "Sign In"}
+                    </button>
 
-                <button type="submit" disabled={loading}>
-                    {loading ? "Signing In..." : "Sign In"}
-                </button>
-
-                {error && <p className="text-red-500">{error}</p>}
-            </form>
+                </form>
+            </div>
         </div>
     );
 }

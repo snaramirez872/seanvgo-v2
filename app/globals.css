@@ -1,1 +1,14 @@
 @import "tailwindcss";
+
+:root {
+    --background: #000414;
+}
+
+* {
+    transition: all ease-in-out 0.2s;
+}
+
+body {
+    background-color: var(--background);
+    color: white;
+}
