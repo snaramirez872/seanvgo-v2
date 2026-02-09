@@ -1,3 +1,5 @@
+import { stringToBase64URL } from "@supabase/ssr";
+
 export type Game = {
     id: number,
     created_at: Date,
@@ -11,4 +13,22 @@ export type Game = {
 export type GamesResponse = {
     count: number;
     data: Game[];
+}
+
+export type SummaryCardProps = {
+    label: string;
+    value: string | number;
+    subtext?: string;
+}
+
+export type BreakdownItem = {
+    label: string,
+    value: number
+}
+
+export type BreakdownCardProps = {
+    title: string;
+    subtitle?: string;
+    items: BreakdownItem[];
+    maxItems?: number;
 }

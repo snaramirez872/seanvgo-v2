@@ -4,6 +4,9 @@ import { useMemo } from "react";
 import { useGames } from "@/hooks/getGames";
 import { gamesAnalytics } from "@/utils/analytics";
 import { GamesResponse } from "@/lib/types/types";
+import SummaryCard from "../components/SummaryCard";
+import getTopN from "@/utils/topN";
+import BreakdownCard from "../components/BreakdownCard";
 
 export default function Analytics() {
     const { games, loading, error } = useGames();
@@ -22,10 +25,12 @@ export default function Analytics() {
 
     if (loading) {
         return (
-            <div>
-                <h2 className="text-2xl font-bold">Analytics</h2>
-                <div>
-                    <p>Loading ...</p>
+            <div className="px-6 md:px-20 py-10">
+                <h2 className="text-2xl font-bold mb-6">Analytics</h2>
+                <div className="rounded-2xl bg-white/5 backdrop-blur-md border border-white/10 p-6">
+                    <p className="text-white/70 animate-pulse">
+                        Loading ...
+                    </p>
                 </div>
             </div>
         );
@@ -33,10 +38,15 @@ export default function Analytics() {
 
     if (error) {
         return (
-            <div>
-                <h2 className="text-2xl font-bold">Analytics</h2>
-                <div>
-                    <p>Error: {error}</p>
+            <div className="px-6 md:px-20 py-10">
+                <h2 className="text-2xl font-bold mb-6">Analytics</h2>
+                <div className="rounded-2xl bg-red-500/10 border border-red-500/20 p-6">
+                    <p className="text-red-400 text-sm">
+                        Something went wrong while loading analytics.
+                    </p>
+                    <p className="text-red-400/70 text-xs mt-2">
+                        {error}
+                    </p>
                 </div>
             </div>
         );
@@ -44,10 +54,15 @@ export default function Analytics() {
 
     if (!analytics) {
         return (
-            <div>
-                <h2 className="text-2xl font-bold">Analytics</h2>
-                <div>
-                    <p>No Data</p>
+            <div className="px-6 md:px-20 py-10">
+                <h2 className="text-2xl font-bold mb-6">Analytics</h2>
+                <div className="rounded-2xl bg-white/5 backdrop-blur-md border border-white/10 p-6">
+                    <p className="text-white/60 text-sm">
+                        No analytics data available yet.
+                    </p>
+                    <p className="text-white/40 text-xs mt-2">
+                        Add some games to start seeing insights.
+                    </p>
                 </div>
             </div>
         );
@@ -68,65 +83,63 @@ export default function Analytics() {
         genres_perc
     } = analytics;
 
+    // Breakdown Prep
+    let topPubs = getTopN(pubs, 5);
+    let topDevs = getTopN(devs, 5);
+    let topPlats = getTopN(plats, 5);
+    let topGenres = getTopN(genres, 5);
+
     return (
-        <div>
-            <h2 className="text-2xl font-bold">Analytics</h2>
-            <div>
-                <p><b>Total Games: </b>{gamesResp.count}</p>
-                <p>The Developer that appears the most in your collection is <span>{max_dev.key}</span> at <span>{max_dev.value}</span> owned games <span>({dev_perc}% of total)</span>.</p>
-                <p>The Publisher that appears the most in your collection is <span>{max_pubs.key}</span> at <span>{max_pubs.value}</span> owned games <span>({pub_perc}% of total)</span>.</p>
-                <p>The Genre that appears the most in your collection is <span>{max_genres.key}</span> at <span>{max_genres.value}</span> owned games <span>({genres_perc}% of total)</span>.</p>
-                <p>The Platform that you own the most games on is <span>{max_plats.key}</span> at <span>{max_plats.value}</span> owned games <span>({plat_perc}% of total)</span>.</p>
+        <div className="px-6 md:px-20 py-10">
+            <h2 className="text-2xl font-bold mb-6">Analytics</h2>
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-4 mb-10">
+                <SummaryCard 
+                    label="Total Games"
+                    value={gamesResp.count}
+                    subtext="In your collection"
+                />
+                <SummaryCard 
+                    label="Top Developer"
+                    value={max_dev.key}
+                    subtext={`${max_dev.value} games · ${dev_perc}%`}
+                />
+                <SummaryCard 
+                    label="Top Publisher"
+                    value={max_pubs.key}
+                    subtext={`${max_pubs.value} games · ${pub_perc}%`}
+                />
+                <SummaryCard 
+                    label="Top Platform"
+                    value={max_plats.key}
+                    subtext={`${max_plats.value} games · ${plat_perc}%`}
+                />
+                <SummaryCard 
+                    label="Top Genre"
+                    value={max_genres.key}
+                    subtext={`${max_genres.value} games · ${genres_perc}%`}
+                />
             </div>
-            <div className="flex">
-                <div>
-                    <h3>Publishers</h3>
-                    <div>
-                        <ul>
-                            {Object.entries(pubs).map(([publisher, count]) => (
-                                <li key={publisher}>
-                                    {publisher} <b><i>({count})</i></b>
-                                </li>
-                            ))}
-                        </ul>
-                    </div>
-                </div>
-                <div>
-                    <h3>Developers</h3>
-                    <div>
-                        <ul>
-                            {Object.entries(devs).map(([developer, count]) => (
-                                <li key={developer}>
-                                    {developer} <b><i>({count})</i></b>
-                                </li>
-                            ))}
-                        </ul>
-                    </div>
-                </div>
-                <div>
-                    <h3>Platforms</h3>
-                    <div>
-                        <ul>
-                            {Object.entries(plats).map(([platform, count]) => (
-                                <li key={platform}>
-                                    {platform} <b><i>({count})</i></b>
-                                </li>
-                            ))}
-                        </ul>
-                    </div>
-                </div>
-                <div>
-                    <h3>Genres</h3>
-                    <div>
-                        <ul>
-                            {Object.entries(genres).map(([genre, count]) => (
-                                <li key={genre}>
-                                    {genre} <b><i>({count})</i></b>
-                                </li>
-                            ))}
-                        </ul>
-                    </div>
-                </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <BreakdownCard 
+                    title="Top Publishers"
+                    subtitle="Most common in your collection"
+                    items={topPubs}
+                />
+                <BreakdownCard 
+                    title="Top Developers"
+                    subtitle="Developers of your collection"
+                    items={topDevs}
+                />
+                <BreakdownCard 
+                    title="Top Platforms"
+                    subtitle="Platforms you play on"
+                    items={topPlats}
+                />
+                <BreakdownCard 
+                    title="Top Genres"
+                    subtitle="Genres you prefer"
+                    items={topGenres}
+                />
             </div>
         </div>
     );
