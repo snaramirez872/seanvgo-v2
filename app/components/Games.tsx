@@ -3,13 +3,19 @@
 import { useEffect, useState, useMemo } from "react";
 import { useGames } from "@/hooks/getGames";
 import { Search } from "lucide-react";
+import { SortKey } from "@/lib/types/types";
+import { SortDir } from "@/lib/types/types";
+import { getNextSort } from "@/utils/getNextSort";
+import SortableTh from "./SortableTh";
 
 export default function Games() {
     const { games, loading, error } = useGames();
     const [query, setQuery] = useState("");
     const [currPage, setCurrPage] = useState(1);
-    const[pageSize, setPageSize] = useState(10);
+    const [pageSize, setPageSize] = useState(10);
     const [searchTerm, setSearchTerm] = useState("");
+    const [sortKey, setSortKey] = useState<SortKey | null>(null);
+    const [sortDir, setSortDir] = useState<SortDir>("asc");
 
     // For Search
     const filteredGames = useMemo(() => {
@@ -34,14 +40,40 @@ export default function Games() {
         setSearchTerm(query);
     }
 
+    // For Sorting
+    const handleSort = (key: SortKey) => {
+        const next = getNextSort(sortKey, sortDir, key);
+        setSortKey(next.sortKey);
+        setSortDir(next.sortDir);
+    }
+
+    const sortedGames = useMemo(() => {
+        if (!sortKey) return filteredGames;
+        const copy = [...filteredGames];
+
+        copy.sort((a, b) => {
+            const normalize = (val: string | string[]) =>
+                Array.isArray(val) ? val.join(", ") : val;
+
+            const aVal = normalize(a[sortKey]).toLowerCase();
+            const bVal = normalize(b[sortKey]).toLowerCase();
+
+            if (aVal < bVal) return sortDir === "asc" ? -1 : 1;
+            if (aVal > bVal) return sortDir === "asc" ? 1: -1;
+            return 0
+        });
+
+        return copy;
+    }, [filteredGames, sortKey, sortDir])
+
     // For Pagination
-    const totalPages = Math.ceil(filteredGames.length / pageSize);
+    const totalPages = Math.ceil(sortedGames.length / pageSize);
 
     const paginatedGames = useMemo(() => {
         const start = (currPage - 1) * pageSize;
         const end = start + pageSize;
-        return filteredGames.slice(start, end);
-    }, [filteredGames, currPage, pageSize]);
+        return sortedGames.slice(start, end);
+    }, [sortedGames, currPage, pageSize]);
 
     useEffect(() => {
         setCurrPage(1);
@@ -112,17 +144,46 @@ export default function Games() {
                 <table className="min-w-225 w-full border-collapse text-sm">
                     <thead className="bg-white/5 sticky top-0 z-10">
                         <tr className="text-left text-white/70">
-                            <th className="py-3 px-4 border-r border-white/10">Title</th>
-                            <th className="py-3 px-4 hidden sm:table-cell border-r border-white/10">
-                                Developer
-                            </th>
-                            <th className="py-3 px-4 hidden sm:table-cell border-r border-white/10">
-                                Publisher
-                            </th>
-                            <th className="py-3 px-4 border-r border-white/10">Platform</th>
-                            <th className="py-3 px-4 hidden lg:table-cell">
-                                Genres
-                            </th>
+                            <SortableTh 
+                                label="Title"
+                                sortKey="title"
+                                activeKey={sortKey}
+                                sortDir={sortDir}
+                                onSort={handleSort}
+                                className="border-r border-white/10"
+                            />
+                            <SortableTh 
+                                label="Developer"
+                                sortKey="developer"
+                                activeKey={sortKey}
+                                sortDir={sortDir}
+                                onSort={handleSort}
+                                className="hidden sm:table-cell border-r border-white/10"
+                            />
+                            <SortableTh 
+                                label="Publisher"
+                                sortKey="publisher"
+                                activeKey={sortKey}
+                                sortDir={sortDir}
+                                onSort={handleSort}
+                                className="hidden md:table-cell border-r border-white/10"
+                            />
+                            <SortableTh 
+                                label="Platform"
+                                sortKey="platform"
+                                activeKey={sortKey}
+                                sortDir={sortDir}
+                                onSort={handleSort}
+                                className="border-r border-white/10"
+                            />
+                            <SortableTh 
+                                label="Genres"
+                                sortKey="genres"
+                                activeKey={sortKey}
+                                sortDir={sortDir}
+                                onSort={handleSort}
+                                className="hidden lg:table-cell"
+                            />
                         </tr>
                     </thead>
                     <tbody className="divide-y divide-white/10">

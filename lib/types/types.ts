@@ -32,3 +32,16 @@ export type BreakdownCardProps = {
     items: BreakdownItem[];
     maxItems?: number;
 }
+
+export type SortKey = "title" | "developer" | "publisher" | "platform" | "genres";
+
+export type SortDir = "asc" | "desc";
+
+export type SortableThProps = {
+    label: string;
+    sortKey: SortKey;
+    activeKey: SortKey | null;
+    sortDir: SortDir;
+    onSort: (key: SortKey) => void;
+    className?: string;
+}
