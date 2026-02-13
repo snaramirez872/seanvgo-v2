@@ -1,8 +1,6 @@
-import { stringToBase64URL } from "@supabase/ssr";
-
 export type Game = {
     id: number,
-    created_at: Date,
+    created_at: string,
     title: string,
     publisher: string | string[],
     developer: string | string[],
@@ -44,4 +42,21 @@ export type SortableThProps = {
     sortDir: SortDir;
     onSort: (key: SortKey) => void;
     className?: string;
+}
+
+export type NewGame = Omit<Game, "id" | "created_at">
+
+export type UpdateGame = Partial<NewGame> & { id: number };
+
+export type AddGameProps = {
+    onSuccess?: () => void;
+    onClose: () => void;
+    game?: Game | null;
+}
+
+export type InputProps = {
+    label: string;
+    value: string;
+    onChange: (v: string) => void;
+    hint?: string;
 }

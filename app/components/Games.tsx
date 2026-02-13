@@ -3,19 +3,23 @@
 import { useEffect, useState, useMemo } from "react";
 import { useGames } from "@/hooks/getGames";
 import { Search } from "lucide-react";
-import { SortKey } from "@/lib/types/types";
-import { SortDir } from "@/lib/types/types";
+import { SortKey, SortDir, Game } from "@/lib/types/types";
 import { getNextSort } from "@/utils/getNextSort";
 import SortableTh from "./SortableTh";
+import GamePopUp from "./GamePopUp";
+import { Pencil } from "lucide-react";
 
 export default function Games() {
-    const { games, loading, error } = useGames();
+    const { games, loading, error, refetch } = useGames();
     const [query, setQuery] = useState("");
     const [currPage, setCurrPage] = useState(1);
     const [pageSize, setPageSize] = useState(10);
     const [searchTerm, setSearchTerm] = useState("");
     const [sortKey, setSortKey] = useState<SortKey | null>(null);
     const [sortDir, setSortDir] = useState<SortDir>("asc");
+    const [modalOpen, setModalOpen] = useState(false);
+    const [modalMode, setModalMode] = useState<"add" | "edit">("add");
+    const [selectedGame, setSelectedGame] = useState<Game | null>(null);
 
     // For Search
     const filteredGames = useMemo(() => {
@@ -110,8 +114,8 @@ export default function Games() {
             <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
                 <h2 className="text-2xl font-bold">Games</h2>
 
-                {/* Search */}
-                <div className="flex gap-2 w-full sm:w-auto">
+                <div className="flex flex-wrap gap-2 w-full sm:w-auto">
+                    {/* Search */}
                     <div className="relative w-full sm:w-72">
                         <Search
                             size={18}
@@ -136,6 +140,18 @@ export default function Games() {
                         className="rounded-lg bg-indigo-600 px-4 py-2 text-white hover:bg-indigo-700 transition"
                     >
                         Search
+                    </button>
+
+                    <button
+                        onClick={() => {
+                            setModalMode("add");
+                            setSelectedGame(null);
+                            setModalOpen(true);
+                        }}
+                        className="cursor-pointer rounded-lg bg-white/10 px-4 py-2 text-white
+                                hover:bg-white/20 transition border border-white/10"
+                    >
+                        + Add Game
                     </button>
                 </div>
             </div>
@@ -265,6 +281,17 @@ export default function Games() {
                     </button>
                 </div>
             </div>
+
+            {/* Add/Edt Game Pop Up*/}
+            {modalOpen && (
+                <GamePopUp
+                    onClose={() => setModalOpen(false)}
+                    onSuccess={() => {
+                        setModalOpen(false);
+                        refetch();
+                    }}
+                />
+            )}
         </div>
     );
 }

@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { supabase } from "@/lib/supabaseClient";
 import { Game } from "@/lib/types/types";
 
@@ -14,51 +14,52 @@ export function useGames() {
     const deployed = process.env.NEXT_PUBLIC_API_DEPLOYED_URL;
     const backend = process.env.NODE_ENV === "development" ? local_url : deployed;
 
-    useEffect(() => {
-        async function fetchGames() {
-            setLoading(true);
-            setError(null);
+     const fetchGames = useCallback(async () => {
+        setLoading(true);
+        setError(null);
 
-            const {
-                data: { session },
-                error: sessionError,
-            } = await supabase.auth.getSession();
+        const {
+            data: { session },
+            error: sessionError,
+        } = await supabase.auth.getSession();
 
-            if (sessionError || !session) {
-                setError("Not authenticated");
-                setLoading(false);
-                return;
-            }
-
-            try {
-                const resp = await fetch(
-                    `${backend}/api/games`,
-                    {
-                        headers: {
-                            Authorization: `Bearer ${session.access_token}`,
-                        },
-                    }
-                );
-
-                if (!resp.ok) {
-                    throw new Error(`API error: ${resp.status}`);
-                }
-
-                const json = await resp.json();
-                setGames(json.data);
-            } catch (err: any) {
-                setError(err.message ?? "Failed to fetch games");
-            } finally {
-                setLoading(false);
-            }
+        if (sessionError || !session) {
+            setError("Not authenticated");
+            setLoading(false);
+            return;
         }
 
+        try {
+            const resp = await fetch(
+                `${backend}/api/games`,
+                {
+                    headers: {
+                        Authorization: `Bearer ${session.access_token}`,
+                    },
+                }
+            );
+
+            if (!resp.ok) {
+                throw new Error(`API error: ${resp.status}`);
+            }
+
+            const json = await resp.json();
+            setGames(json.data);
+        } catch (err: any) {
+            setError(err.message ?? "Failed to fetch games");
+        } finally {
+            setLoading(false);
+        }
+    }, [backend]);
+
+    useEffect(() => {
         fetchGames();
-    }, []);
+    }, [fetchGames]);
 
     return {
         games,
         loading,
-        error
+        error,
+        refetch: fetchGames,
     }
 }
