@@ -1,12 +1,17 @@
 "use client";
 
 import { useState } from "react";
-import { insertGame } from "@/utils/crudFuncs";
+import { useGameMutations } from "@/hooks/useGameMutations";
 import { AddGameProps } from "@/lib/types/types";
 import { X } from "lucide-react";
 import Input from "./Input";
 
 export default function GamePopUp({ onSuccess, onClose }: AddGameProps) {
+    const backend = process.env.NODE_ENV === "development" 
+        ? process.env.NEXT_PUBLIC_API_LOCAL_URL 
+        : process.env.NEXT_PUBLIC_API_DEPLOYED_URL;
+    const { insertGame } = useGameMutations(backend!);
+
     const [form, setForm] = useState({
         title: "",
         developer: "",

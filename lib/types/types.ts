@@ -46,7 +46,7 @@ export type SortableThProps = {
 
 export type NewGame = Omit<Game, "id" | "created_at">
 
-export type UpdateGame = Partial<NewGame> & { id: number };
+//export type UpdateGame = Partial<NewGame> & { id: number };
 
 export type AddGameProps = {
     onSuccess?: () => void;
@@ -59,4 +59,11 @@ export type InputProps = {
     value: string;
     onChange: (v: string) => void;
     hint?: string;
+}
+
+export type DeleteGamePopUpProps = {
+    title: string;
+    onCancel: () => void;
+    onConfirm: () => void;
+    loading?: boolean;
 }

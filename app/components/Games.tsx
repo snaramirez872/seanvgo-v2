@@ -2,15 +2,21 @@
 
 import { useEffect, useState, useMemo } from "react";
 import { useGames } from "@/hooks/getGames";
-import { Search } from "lucide-react";
+import { Search, Pencil, Trash } from "lucide-react";
 import { SortKey, SortDir, Game } from "@/lib/types/types";
 import { getNextSort } from "@/utils/getNextSort";
 import SortableTh from "./SortableTh";
 import GamePopUp from "./GamePopUp";
-import { Pencil } from "lucide-react";
+import DeleteGamePopUp from "./DeleteGamePopUp";
+import { useGameMutations } from "@/hooks/useGameMutations";
 
 export default function Games() {
     const { games, loading, error, refetch } = useGames();
+    const backend = process.env.NODE_ENV === "development"
+        ? process.env.NEXT_PUBLIC_API_LOCAL_URL
+        : process.env.NEXT_PUBLIC_API_DEPLOYED_URL;
+    const { deleteGame } = useGameMutations(backend!);
+
     const [query, setQuery] = useState("");
     const [currPage, setCurrPage] = useState(1);
     const [pageSize, setPageSize] = useState(10);
@@ -18,8 +24,10 @@ export default function Games() {
     const [sortKey, setSortKey] = useState<SortKey | null>(null);
     const [sortDir, setSortDir] = useState<SortDir>("asc");
     const [modalOpen, setModalOpen] = useState(false);
-    const [modalMode, setModalMode] = useState<"add" | "edit">("add");
+    //const [modalMode, setModalMode] = useState<"add" | "edit">("add");
     const [selectedGame, setSelectedGame] = useState<Game | null>(null);
+    const [deleteModalOpen, setDeleteModalOpen] = useState(false);
+    const [gameToDelete, setGameToDelete] = useState<{ id: number; title: string } | null>(null);
 
     // For Search
     const filteredGames = useMemo(() => {
@@ -90,6 +98,19 @@ export default function Games() {
         return val;
     };
 
+    // Delete Game
+    const handleDelete = async (id: number) => {
+        if (!confirm("Are you sure you want to delete this game?")) return;
+
+        try {
+            await deleteGame(id); // call the hook
+            refetch(); // refresh the table
+        } catch (err) {
+            console.error("Failed to delete game:", err);
+            alert("Failed to delete game");
+        }
+    };
+
     if (loading) {
         return (
             <div className="px-6 md:px-20 py-10">
@@ -144,7 +165,7 @@ export default function Games() {
 
                     <button
                         onClick={() => {
-                            setModalMode("add");
+                            //setModalMode("add");
                             setSelectedGame(null);
                             setModalOpen(true);
                         }}
@@ -200,6 +221,7 @@ export default function Games() {
                                 onSort={handleSort}
                                 className="hidden lg:table-cell"
                             />
+                            <th className="py-3 px-4 border-r border-white/10 cursor-pointer select-none hover:text-white transition">Actions</th>
                         </tr>
                     </thead>
                     <tbody className="divide-y divide-white/10">
@@ -233,6 +255,19 @@ export default function Games() {
                                     </td>
                                     <td className="py-3 px-4 hidden lg:table-cell text-white/60">
                                         {formatValue(fg.genres)}
+                                    </td>
+                                    <td className="py-3 px-4 text-white/70 whitespace-nowrap border-r border-white/10">
+                                        <div className="flex gap-2 items-center float-right">
+                                            <Pencil size={20} className="text-indigo-500" />
+                                            <Trash 
+                                                size={20} 
+                                                className="text-red-500 cursor-pointer" 
+                                                onClick={() => {
+                                                    setGameToDelete({ id: fg.id, title: fg.title });
+                                                    setDeleteModalOpen(true);
+                                                }} 
+                                            />
+                                        </div>
                                     </td>
                                 </tr>
                             ))
@@ -289,6 +324,23 @@ export default function Games() {
                     onSuccess={() => {
                         setModalOpen(false);
                         refetch();
+                    }}
+                />
+            )}
+
+            {deleteModalOpen && gameToDelete && (
+                <DeleteGamePopUp
+                    title={gameToDelete.title}
+                    onCancel={() => setDeleteModalOpen(false)}
+                    onConfirm={async () => {
+                        try {
+                            await deleteGame(gameToDelete.id);
+                            setDeleteModalOpen(false);
+                            refetch();
+                        } catch (err) {
+                            console.error(err);
+                            alert("Failed to delete game");
+                        }
                     }}
                 />
             )}
