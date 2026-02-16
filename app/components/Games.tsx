@@ -317,7 +317,7 @@ export default function Games() {
                 </div>
             </div>
 
-            {/* Add/Edt Game Pop Up*/}
+            {/* Add Game Pop Up*/}
             {modalOpen && (
                 <GamePopUp
                     onClose={() => setModalOpen(false)}
@@ -328,6 +328,7 @@ export default function Games() {
                 />
             )}
 
+            {/* Delete Game Pop Up */}
             {deleteModalOpen && gameToDelete && (
                 <DeleteGamePopUp
                     title={gameToDelete.title}

@@ -6,6 +6,7 @@ export type Game = {
     developer: string | string[],
     platform: string | string[],
     genres: string | string[];
+    user_id: string
 }
 
 export type GamesResponse = {
@@ -44,7 +45,7 @@ export type SortableThProps = {
     className?: string;
 }
 
-export type NewGame = Omit<Game, "id" | "created_at">
+export type NewGame = Omit<Game, "id" | "created_at" | "user_id">
 
 //export type UpdateGame = Partial<NewGame> & { id: number };
 
