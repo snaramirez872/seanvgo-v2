@@ -62,9 +62,9 @@ export default function NavBar() {
                     )}
 
                     {isLoggedIn ? (
-                        <button onClick={handleSignOut} className="bg-indigo-600 px-3 py-2 rounded-xl hover:rounded-3xl hover:cursor-pointer hover:bg-indigo-800">Sign Out</button>
+                        <button onClick={handleSignOut} className="bg-indigo-600 px-3 py-2 rounded-xl hover:rounded-2xl hover:cursor-pointer hover:bg-indigo-800">Sign Out</button>
                     ) : (
-                        <Link href="/login" className="bg-indigo-600 px-3 py-2 rounded-xl hover:rounded-3xl hover:bg-indigo-800">Sign In</Link>
+                        <Link href="/login" className="bg-indigo-600 px-3 py-2 rounded-xl hover:rounded-2xl hover:bg-indigo-800">Sign In</Link>
                     )}
                 </div>
 

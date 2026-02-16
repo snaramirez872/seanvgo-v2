@@ -158,7 +158,7 @@ export default function Games() {
                     </div>
                     <button 
                         onClick={handleSearch}
-                        className="rounded-lg bg-indigo-600 px-4 py-2 text-white hover:bg-indigo-700 transition"
+                        className="cursor-pointer rounded-lg bg-indigo-600 px-4 py-2 text-white hover:bg-indigo-700 transition"
                     >
                         Search
                     </button>
@@ -258,7 +258,14 @@ export default function Games() {
                                     </td>
                                     <td className="py-3 px-4 text-white/70 whitespace-nowrap border-r border-white/10">
                                         <div className="flex gap-2 items-center float-right">
-                                            <Pencil size={20} className="text-indigo-500" />
+                                            <Pencil
+                                                size={20}
+                                                className="text-indigo-500 cursor-pointer"
+                                                onClick={() => {
+                                                    setSelectedGame(fg);
+                                                    setModalOpen(true);
+                                                }}
+                                            />
                                             <Trash 
                                                 size={20} 
                                                 className="text-red-500 cursor-pointer" 
@@ -296,7 +303,7 @@ export default function Games() {
                     <button
                         onClick={() => setCurrPage((p) => Math.max(1, p - 1))}
                         disabled={currPage === 1}
-                        className="px-3 py-1 rounded-lg bg-white/10 text-white disabled:opacity-40 disabled:cursor-not-allowed hover:bg-white/20 transition"
+                        className="px-3 py-1 rounded-lg bg-white/10 text-white cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed hover:bg-white/20 transition"
                     >
                         Prev
                     </button>
@@ -310,19 +317,25 @@ export default function Games() {
                             setCurrPage((p) => Math.min(totalPages, p + 1))
                         }
                         disabled={currPage === totalPages || totalPages === 0}
-                        className="px-3 py-1 rounded-lg bg-white/10 text-white disabled:opacity-40 disabled:cursor-not-allowed hover:bg-white/20 transition"
+                        className="px-3 py-1 rounded-lg bg-white/10 text-white cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed hover:bg-white/20 transition"
                     >
                       Next
                     </button>
                 </div>
             </div>
 
-            {/* Add Game Pop Up*/}
+            {/* Add/Edit Game Pop Up*/}
             {modalOpen && (
                 <GamePopUp
-                    onClose={() => setModalOpen(false)}
+                    mode={selectedGame? "edit" : "add"}
+                    game={selectedGame}
+                    onClose={() => {
+                        setModalOpen(false);
+                        setSelectedGame(null);
+                    }}
                     onSuccess={() => {
                         setModalOpen(false);
+                        setSelectedGame(null);
                         refetch();
                     }}
                 />

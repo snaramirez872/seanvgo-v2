@@ -51,8 +51,28 @@ export function useGameMutations(backend: string) {
         }
     };
 
+    const updateGame = async (id: number, game: Partial<NewGame>) => {
+        const session = await getSession();
+
+        const resp = await fetch(`${backend}/api/games/${id}`, {
+            method: "PUT",
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${session.access_token}`,
+            },
+            body: JSON.stringify(game),
+        });
+
+        if (!resp.ok) {
+            throw new Error("Failed to update game");
+        }
+
+        return await resp.json();
+    };
+
     return {
         insertGame,
         deleteGame,
+        updateGame,
     };
 }

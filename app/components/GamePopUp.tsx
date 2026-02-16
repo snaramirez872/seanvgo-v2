@@ -1,16 +1,21 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useGameMutations } from "@/hooks/useGameMutations";
-import { AddGameProps } from "@/lib/types/types";
+import { AddGameProps, Game } from "@/lib/types/types";
 import { X } from "lucide-react";
 import Input from "./Input";
 
-export default function GamePopUp({ onSuccess, onClose }: AddGameProps) {
+type GamePopUpProps = AddGameProps & {
+    mode?: "add" | "edit"; // default to "add"
+    game?: Game | null;
+};
+
+export default function GamePopUp({ onSuccess, onClose, mode = "add", game }: GamePopUpProps) {
     const backend = process.env.NODE_ENV === "development" 
         ? process.env.NEXT_PUBLIC_API_LOCAL_URL 
         : process.env.NEXT_PUBLIC_API_DEPLOYED_URL;
-    const { insertGame } = useGameMutations(backend!);
+    const { insertGame, updateGame } = useGameMutations(backend!);
 
     const [form, setForm] = useState({
         title: "",
@@ -22,6 +27,20 @@ export default function GamePopUp({ onSuccess, onClose }: AddGameProps) {
 
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
+
+    useEffect(() => {
+        if (mode === "edit" && game) {
+            const toString = (val: string | string[]) =>
+                Array.isArray(val) ? val.join(", ") : val ?? "";
+            setForm({
+                title: game.title,
+                developer: toString(game.developer),
+                publisher: toString(game.publisher),
+                platform: toString(game.platform),
+                genres: toString(game.genres),
+            });
+        }
+    }, [mode, game]);
 
     const update = (key: keyof typeof form, value: string) => { setForm(prev => ({ ...prev, [key]: value})); }
 
@@ -37,13 +56,23 @@ export default function GamePopUp({ onSuccess, onClose }: AddGameProps) {
         setError(null);
 
         try {
-            await insertGame({
-                title: form.title,
-                developer: toArray(form.developer),
-                publisher: toArray(form.publisher),
-                platform: toArray(form.platform),
-                genres: toArray(form.genres),
-            });
+            if (mode === "add") {
+                await insertGame({
+                    title: form.title,
+                    developer: toArray(form.developer),
+                    publisher: toArray(form.publisher),
+                    platform: toArray(form.platform),
+                    genres: toArray(form.genres),
+                });
+            } else if (mode === "edit" && game?.id) {
+                await updateGame(game.id, {
+                    title: form.title,
+                    developer: toArray(form.developer),
+                    publisher: toArray(form.publisher),
+                    platform: toArray(form.platform),
+                    genres: toArray(form.genres),
+                });
+            }
 
             setForm({
                 title: "",
@@ -68,7 +97,7 @@ export default function GamePopUp({ onSuccess, onClose }: AddGameProps) {
                 {/* Header */}
                 <div className="flex items-center justify-between px-6 py-4 border-b border-white/10">
                     <h3 className="text-xl font-bold text-white">
-                        Add Game
+                        {mode === "add" ? "Add Game" : "Edit Game"}
                     </h3>
                     <button onClick={onClose} className="cursor-pointer text-white/50 hover:text-white transition">
                         <X size={18} className="text-white/60" />
@@ -81,25 +110,25 @@ export default function GamePopUp({ onSuccess, onClose }: AddGameProps) {
                         label="Title" 
                         value={form.title} 
                         onChange={v => update("title", v)} 
-                    /> 
+                    />
                     <Input 
                         label="Developer" 
                         hint="If more than one, comma separated" 
                         value={form.developer} 
                         onChange={v => update("developer", v)} 
-                    /> 
+                    />
                     <Input 
                         label="Publisher" 
                         hint="If more than one, comma separated" 
                         value={form.publisher} 
                         onChange={v => update("publisher", v)} 
-                    /> 
+                    />
                     <Input 
                         label="Platform" 
                         hint="If more than one, comma separated" 
                         value={form.platform} 
                         onChange={v => update("platform", v)} 
-                    /> 
+                    />
                     <Input 
                         label="Genres" 
                         hint="If more than one, comma separated" 
@@ -122,7 +151,7 @@ export default function GamePopUp({ onSuccess, onClose }: AddGameProps) {
                         disabled={loading}
                         className="cursor-pointer px-4 py-2 rounded-lg bg-indigo-600 text-white hover:bg-indigo-700 disabled:opacity-50 disabled:cursor-not-allowed transition"
                     >
-                        {loading ? "Saving..." : "Add Game"}
+                        {loading ? "Saving..." : mode === "add" ? "Add Game" : "Save Changes"}
                     </button>
                 </div>
             </div>

@@ -3,6 +3,7 @@ from app.core.config import supabase
 
 router = APIRouter()
 
+# Getting the Games List
 @router.get("/games", tags=["games"])
 def get_games_list(request: Request):
     try:
@@ -33,6 +34,7 @@ def get_games_list(request: Request):
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
+# Inserting Game
 @router.post("/games", tags=["games"])
 def create_game(game: dict, request: Request):
     try:
@@ -55,6 +57,7 @@ def create_game(game: dict, request: Request):
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
+# Deleting a Game
 @router.delete("/games/{game_id}", tags=["games"])
 def delete_game(game_id: int, request: Request):
     try:
@@ -83,5 +86,35 @@ def delete_game(game_id: int, request: Request):
             raise HTTPException(status_code=404, detail="Game not found")
         
         return {"message": "Game deleted successfully"}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+    
+# Editing Game
+@router.put("/games/{game_id}", tags=["games"])
+def update_game(game_id: int, game: dict, request: Request):
+    try:
+        auth_header = request.headers.get("Authorization")
+        if not auth_header:
+            raise HTTPException(status_code=401, detail="Missing Authorization header")
+
+        token = auth_header.replace("Bearer ", "")
+        user_resp = supabase.auth.get_user(token)
+        user = user_resp.user
+
+        if not user:
+            raise HTTPException(status_code=401, detail="Invalid token")
+
+        resp = (
+            supabase.table("games_list")
+            .update(game)
+            .eq("id", game_id)
+            .eq("user_id", user.id)
+            .execute()
+        )
+
+        if not resp.data:
+            raise HTTPException(status_code=404, detail="Game not found or you don't have access")
+
+        return {"count": 1, "data": resp.data}
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
