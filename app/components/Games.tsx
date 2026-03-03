@@ -29,20 +29,25 @@ export default function Games() {
     const [deleteModalOpen, setDeleteModalOpen] = useState(false);
     const [gameToDelete, setGameToDelete] = useState<{ id: number; title: string } | null>(null);
 
+    // Normalize Text for Search
+    const normalizeText = (text: string) => text.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
+
     // For Search
     const filteredGames = useMemo(() => {
         if (!searchTerm.trim()) return games;
 
-        const keywords = searchTerm.toLowerCase().split(/\s+/).filter(Boolean);
+        const keywords = normalizeText(searchTerm).split(/\s+/).filter(Boolean);
 
         return games.filter(game => {
-            const searchableText = [
+            const joinedText = [
                 game.title,
                 game.developer,
                 game.publisher,
                 game.platform,
                 game.genres
-            ].join(" ").toLowerCase();
+            ].join(" ");
+
+            const searchableText = normalizeText(joinedText);
 
             return keywords.every(kw => searchableText.includes(kw));
         });
@@ -98,6 +103,7 @@ export default function Games() {
         return val;
     };
 
+    /*
     // Delete Game
     const handleDelete = async (id: number) => {
         if (!confirm("Are you sure you want to delete this game?")) return;
@@ -110,6 +116,7 @@ export default function Games() {
             alert("Failed to delete game");
         }
     };
+    */
 
     if (loading) {
         return (
