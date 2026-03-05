@@ -1,11 +1,25 @@
 "use client";
-
+import { useEffect } from "react";
 import { X } from "lucide-react";
 import { DeleteGamePopUpProps } from "@/lib/types/types";
 
 export default function DeleteGamePopUp({ title, onCancel, onConfirm, loading = false }: DeleteGamePopUpProps) {
+
+    // Escape Key to Close
+    useEffect(() => {
+        const handleKeyDown = (e: KeyboardEvent) => {
+            if (e.key === "Escape") {
+                onCancel();
+            }
+        };
+
+        window.addEventListener("keydown", handleKeyDown);
+        
+        return () => window.removeEventListener("keydown", handleKeyDown);
+    }, [onCancel]);
+
     return (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm">
+        <div onClick={onCancel} className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm">
             <div className="w-full max-w-md rounded-2xl border border-white/10 bg-white/5 backdrop-blur-md shadow-xl">
                 {/* Header */}
                 <div className="flex items-center justify-between px-6 py-4 border-b border-white/10">

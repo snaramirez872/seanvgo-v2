@@ -28,6 +28,19 @@ export default function GamePopUp({ onSuccess, onClose, mode = "add", game }: Ga
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
 
+    // Escape Key to Close
+    useEffect(() => {
+        const handleKeyDown = (e: KeyboardEvent) => {
+            if (e.key === "Escape" && !loading) {
+                onClose();
+            }
+        };
+
+        window.addEventListener("keydown", handleKeyDown);
+
+        return () => window.removeEventListener("keydown", handleKeyDown);
+    }, [onClose, loading]);
+
     useEffect(() => {
         if (mode === "edit" && game) {
             const toString = (val: string | string[]) =>
@@ -92,7 +105,7 @@ export default function GamePopUp({ onSuccess, onClose, mode = "add", game }: Ga
     };
 
     return (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm">
+        <div onClick={onClose} className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm">
             <div className="w-full max-w-lg rounded-2xl border border-white/10 bg-white/5 backdrop-blur-md shadow-xl">
                 {/* Header */}
                 <div className="flex items-center justify-between px-6 py-4 border-b border-white/10">
