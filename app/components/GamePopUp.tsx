@@ -111,7 +111,7 @@ export default function GamePopUp({ onSuccess, onClose, mode = "add", game }: Ga
 
     return (
         <div onClick={onClose} className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm">
-            <div className="w-full max-w-lg rounded-2xl border border-white/10 bg-white/5 backdrop-blur-md shadow-xl">
+            <div onClick={(e) => e.stopPropagation()} className="w-full max-w-lg rounded-2xl border border-white/10 bg-white/5 backdrop-blur-md shadow-xl">
                 {/* Header */}
                 <div className="flex items-center justify-between px-6 py-4 border-b border-white/10">
                     <h3 className="text-xl font-bold text-white">
