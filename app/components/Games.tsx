@@ -213,7 +213,7 @@ export default function Games() {
                                 className="hidden md:table-cell border-r border-white/10"
                             />
                             <SortableTh 
-                                label="Platform"
+                                label="Platform(s) Owned"
                                 sortKey="platform"
                                 activeKey={sortKey}
                                 sortDir={sortDir}
@@ -227,6 +227,14 @@ export default function Games() {
                                 sortDir={sortDir}
                                 onSort={handleSort}
                                 className="hidden lg:table-cell"
+                            />
+                            <SortableTh 
+                                label="Release Date"
+                                sortKey="release_date"
+                                activeKey={sortKey}
+                                sortDir={sortDir}
+                                onSort={handleSort}
+                                className="hidden lg:table-cell border-white/10"
                             />
                             <th className="py-3 px-4 border-r border-white/10 cursor-pointer select-none hover:text-white transition">Actions</th>
                         </tr>
@@ -260,8 +268,11 @@ export default function Games() {
                                     <td className="py-3 px-4 text-white/70 whitespace-nowrap border-r border-white/10">
                                         {formatValue(fg.platform)}
                                     </td>
-                                    <td className="py-3 px-4 hidden lg:table-cell text-white/60">
+                                    <td className="py-3 px-4 hidden lg:table-cell text-white/70 whitespace-nowrap border-r border-white/10">
                                         {formatValue(fg.genres)}
+                                    </td>
+                                    <td className="py-3 px-4 hidden lg:table-cell text-white/70 whitespace-nowrap border-r border-white/10">
+                                        {fg.release_date}
                                     </td>
                                     <td className="py-3 px-4 text-white/70 whitespace-nowrap border-r border-white/10">
                                         <div className="flex gap-2 items-center float-right">

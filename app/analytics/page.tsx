@@ -7,6 +7,7 @@ import { GamesResponse } from "@/lib/types/types";
 import SummaryCard from "../components/SummaryCard";
 import getTopN from "@/utils/topN";
 import BreakdownCard from "../components/BreakdownCard";
+import StatCard from "../components/StatCard";
 
 export default function Analytics() {
     const { games, loading, error } = useGames();
@@ -80,7 +81,13 @@ export default function Analytics() {
         dev_perc,
         pub_perc,
         plat_perc,
-        genres_perc
+        genres_perc,
+        uniqueDevs,
+        uniquePubs,
+        allYears,
+        max_year,
+        years_perc,
+        gamesPerDecade
     } = analytics;
 
     // Breakdown Prep
@@ -88,6 +95,7 @@ export default function Analytics() {
     let topDevs = getTopN(devs, 5);
     let topPlats = getTopN(plats, 5);
     let topGenres = getTopN(genres, 5);
+    let topDecades = getTopN(gamesPerDecade, 5);
 
     return (
         <div className="px-6 md:px-20 py-10">
@@ -118,17 +126,34 @@ export default function Analytics() {
                     value={max_genres.key}
                     subtext={`${max_genres.value} games · ${genres_perc}%`}
                 />
-            </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <BreakdownCard 
-                    title="Top Publishers"
-                    subtitle="Most common in your collection"
-                    items={topPubs}
+                <SummaryCard 
+                    label="Favorite Year of Gaming"
+                    value={max_year.key}
+                    subtext={`${max_year.value} games · ${years_perc}%`}
                 />
+            </div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                <StatCard
+                    title="Unique Developers"
+                    value={uniqueDevs}
+                    subtitle="Developers represented in your library"
+                />
+                <StatCard
+                    title="Unique Publishers"
+                    value={uniquePubs}
+                    subtitle="Publishers represented in your library"
+                />
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 py-10">
                 <BreakdownCard 
                     title="Top Developers"
                     subtitle="Developers of your collection"
                     items={topDevs}
+                />
+                <BreakdownCard 
+                    title="Top Publishers"
+                    subtitle="Most common in your collection"
+                    items={topPubs}
                 />
                 <BreakdownCard 
                     title="Top Platforms"
@@ -139,6 +164,11 @@ export default function Analytics() {
                     title="Top Genres"
                     subtitle="Genres you prefer"
                     items={topGenres}
+                />
+                <BreakdownCard 
+                    title="Top Decades"
+                    subtitle="Your favorite decades in gaming history"
+                    items={topDecades}
                 />
             </div>
         </div>

@@ -1,12 +1,13 @@
 export type Game = {
-    id: number,
-    created_at: string,
-    title: string,
-    publisher: string | string[],
-    developer: string | string[],
-    platform: string | string[],
+    id: number;
+    created_at: string;
+    title: string;
+    publisher: string | string[];
+    developer: string | string[];
+    platform: string | string[];
     genres: string | string[];
-    user_id: string
+    user_id: string;
+    release_date: string;
 }
 
 export type GamesResponse = {
@@ -32,7 +33,7 @@ export type BreakdownCardProps = {
     maxItems?: number;
 }
 
-export type SortKey = "title" | "developer" | "publisher" | "platform" | "genres";
+export type SortKey = "title" | "developer" | "publisher" | "platform" | "genres" | "release_date";
 
 export type SortDir = "asc" | "desc";
 
@@ -68,3 +69,9 @@ export type DeleteGamePopUpProps = {
     onConfirm: () => void;
     loading?: boolean;
 }
+
+export type StatCardProps = {
+    title: string;
+    value: number;
+    subtitle?: string;
+};

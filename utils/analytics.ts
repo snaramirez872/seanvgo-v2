@@ -1,4 +1,5 @@
 import { GamesResponse } from "@/lib/types/types";
+import { release } from "os";
 
 export function gamesAnalytics(resp: GamesResponse) {
     // Helper Function
@@ -77,6 +78,41 @@ export function gamesAnalytics(resp: GamesResponse) {
     let plat_perc = toPercent(max_plats.value, resp.count);
     let genres_perc = toPercent(max_genres.value, resp.count);
 
+    // Unique Developers and Publishers
+    const uniqueDevs = Object.keys(devs).length;
+    const uniquePubs = Object.keys(pubs).length;
+
+    // Release Dates
+    const releaseDates = resp.data.map(g => g.release_date).filter(Boolean).map(date => Number(date.split(" ").pop()));
+    let allYears: Record<string, number> = {}
+
+    // Total Games for each year
+    for (let i = 0; i < releaseDates.length; ++i) {
+        if (releaseDates[i] in allYears) {
+            allYears[releaseDates[i]] += 1;
+        } else {
+            allYears[releaseDates[i]] = 1;
+        }
+    }
+
+    let max_year = Object.entries(allYears).reduce(
+        (max, [key, val]) =>
+            val > max.value ? { key, value: val } : max,
+        { key: "", value: 0 }
+    );
+
+    // Games Per Decade
+    const gamesPerDecade = releaseDates.reduce((acc, year) => {
+        const decade = Math.floor(year / 10) * 10; // i.e. 2012 -> 2010
+
+        acc[decade] = (acc[decade] || 0) + 1;
+
+        return acc;
+    }, {} as Record<number, number>);
+
+    // Years Percentage
+    let years_perc = toPercent(max_year.value, resp.count);
+
     return {
         pubs,
         devs,
@@ -89,6 +125,12 @@ export function gamesAnalytics(resp: GamesResponse) {
         dev_perc,
         pub_perc,
         plat_perc,
-        genres_perc
+        genres_perc,
+        uniqueDevs,
+        uniquePubs,
+        allYears,
+        max_year,
+        years_perc,
+        gamesPerDecade
     }
 }

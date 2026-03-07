@@ -2,12 +2,7 @@
 
 import { BreakdownItem, BreakdownCardProps } from "@/lib/types/types";
 
-export default function BreakdownCard({
-    title,
-    subtitle,
-    items,
-    maxItems = 5,
-}: BreakdownCardProps) {
+export default function BreakdownCard({ title, subtitle, items, maxItems = 5 }: BreakdownCardProps) {
     let visibleItems = items.slice(0, maxItems);
 
     return (

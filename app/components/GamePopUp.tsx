@@ -23,6 +23,7 @@ export default function GamePopUp({ onSuccess, onClose, mode = "add", game }: Ga
         publisher: "",
         platform: "",
         genres: "",
+        release_date: "",
     });
 
     const [loading, setLoading] = useState(false);
@@ -51,6 +52,7 @@ export default function GamePopUp({ onSuccess, onClose, mode = "add", game }: Ga
                 publisher: toString(game.publisher),
                 platform: toString(game.platform),
                 genres: toString(game.genres),
+                release_date: game.release_date,
             });
         }
     }, [mode, game]);
@@ -76,6 +78,7 @@ export default function GamePopUp({ onSuccess, onClose, mode = "add", game }: Ga
                     publisher: toArray(form.publisher),
                     platform: toArray(form.platform),
                     genres: toArray(form.genres),
+                    release_date: form.release_date,
                 });
             } else if (mode === "edit" && game?.id) {
                 await updateGame(game.id, {
@@ -84,6 +87,7 @@ export default function GamePopUp({ onSuccess, onClose, mode = "add", game }: Ga
                     publisher: toArray(form.publisher),
                     platform: toArray(form.platform),
                     genres: toArray(form.genres),
+                    release_date: form.release_date,
                 });
             }
 
@@ -93,6 +97,7 @@ export default function GamePopUp({ onSuccess, onClose, mode = "add", game }: Ga
                 publisher: "",
                 platform: "",
                 genres: "",
+                release_date: "",
             });
 
             onSuccess?.();
@@ -147,6 +152,12 @@ export default function GamePopUp({ onSuccess, onClose, mode = "add", game }: Ga
                         hint="If more than one, comma separated" 
                         value={form.genres} 
                         onChange={v => update("genres", v)} 
+                    />
+                    <Input 
+                        label="Release Date" 
+                        hint="Please put whole date (i.e. March 5, 2026)" 
+                        value={form.release_date} 
+                        onChange={v => update("release_date", v)} 
                     />
                     {error && <p className="text-sm text-red-500">{error}</p>}
                 </div>
