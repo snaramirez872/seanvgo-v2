@@ -24,7 +24,6 @@ export default function Games() {
     const [sortKey, setSortKey] = useState<SortKey | null>(null);
     const [sortDir, setSortDir] = useState<SortDir>("asc");
     const [modalOpen, setModalOpen] = useState(false);
-    //const [modalMode, setModalMode] = useState<"add" | "edit">("add");
     const [selectedGame, setSelectedGame] = useState<Game | null>(null);
     const [deleteModalOpen, setDeleteModalOpen] = useState(false);
     const [gameToDelete, setGameToDelete] = useState<{ id: number; title: string } | null>(null);
@@ -44,7 +43,8 @@ export default function Games() {
                 game.developer,
                 game.publisher,
                 game.platform,
-                game.genres
+                game.genres,
+                game.release_date
             ].join(" ");
 
             const searchableText = normalizeText(joinedText);
@@ -72,12 +72,24 @@ export default function Games() {
             const normalize = (val: string | string[]) =>
                 Array.isArray(val) ? val.join(", ") : val;
 
+            // Special handling for release_date
+            if (sortKey === "release_date") {
+                const aDate = a.release_date ? new Date(a.release_date).getTime() : 0;
+                const bDate = b.release_date ? new Date(b.release_date).getTime() : 0;
+
+                console.log(a.release_date, new Date(a.release_date).getTime());
+
+                return sortDir === "asc"
+                    ? aDate - bDate
+                    : bDate - aDate;
+            }
+
             const aVal = normalize(a[sortKey]).toLowerCase();
             const bVal = normalize(b[sortKey]).toLowerCase();
 
             if (aVal < bVal) return sortDir === "asc" ? -1 : 1;
-            if (aVal > bVal) return sortDir === "asc" ? 1: -1;
-            return 0
+            if (aVal > bVal) return sortDir === "asc" ? 1 : -1;
+            return 0;
         });
 
         return copy;
@@ -103,25 +115,10 @@ export default function Games() {
         return val;
     };
 
-    /*
-    // Delete Game
-    const handleDelete = async (id: number) => {
-        if (!confirm("Are you sure you want to delete this game?")) return;
-
-        try {
-            await deleteGame(id); // call the hook
-            refetch(); // refresh the table
-        } catch (err) {
-            console.error("Failed to delete game:", err);
-            alert("Failed to delete game");
-        }
-    };
-    */
-
     if (loading) {
         return (
             <div className="px-6 md:px-20 py-10">
-                <h2 className="text-2xl font-bold mb-4">Games</h2>
+                <h2 className="text-3xl font-bold text-white mb-6">Games</h2>
                 <p className="text-white/70">Loading...</p>
             </div>
         );
@@ -130,7 +127,7 @@ export default function Games() {
     if (error) {
         return (
             <div className="px-6 md:px-20 py-10">
-                <h2 className="text-2xl font-bold mb-4">Games</h2>
+                <h2 className="text-3xl font-bold text-white mb-6">Games</h2>
                 <p className="text-red-500">Error: {error}</p>
             </div>
         );
@@ -140,7 +137,7 @@ export default function Games() {
         <div className="px-6 md:px-20 py-10">
             {/* Header */}
             <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
-                <h2 className="text-2xl font-bold">Games</h2>
+                <h2 className="text-3xl font-bold text-white mb-6">Games</h2>
 
                 <div className="flex flex-wrap gap-2 w-full sm:w-auto">
                     {/* Search */}

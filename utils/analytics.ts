@@ -1,5 +1,4 @@
 import { GamesResponse } from "@/lib/types/types";
-import { release } from "os";
 
 export function gamesAnalytics(resp: GamesResponse) {
     // Helper Function
@@ -128,7 +127,6 @@ export function gamesAnalytics(resp: GamesResponse) {
         genres_perc,
         uniqueDevs,
         uniquePubs,
-        allYears,
         max_year,
         years_perc,
         gamesPerDecade

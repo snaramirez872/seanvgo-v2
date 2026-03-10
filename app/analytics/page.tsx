@@ -24,10 +24,22 @@ export default function Analytics() {
         return gamesAnalytics(gamesResp);
     }, [gamesResp]);
 
+    // Most Recent Added Game
+    const mostRecentGame = useMemo(() => {
+        if (!games.length) return null;
+
+        return games.reduce((latest, game) => {
+            const latestTime = new Date(latest.created_at).getTime();
+            const gameTime = new Date(game.created_at).getTime();
+
+            return gameTime > latestTime ? game : latest;
+        });
+    }, [games]);
+
     if (loading) {
         return (
             <div className="px-6 md:px-20 py-10">
-                <h2 className="text-2xl font-bold mb-6">Analytics</h2>
+                <h2 className="text-3xl font-bold text-white mb-6">Analytics</h2>
                 <div className="rounded-2xl bg-white/5 backdrop-blur-md p-6">
                     <p className="text-white/70 animate-pulse">
                         Loading ...
@@ -40,7 +52,7 @@ export default function Analytics() {
     if (error) {
         return (
             <div className="px-6 md:px-20 py-10">
-                <h2 className="text-2xl font-bold mb-6">Analytics</h2>
+                <h2 className="text-3xl font-bold text-white mb-6">Analytics</h2>
                 <div className="rounded-2xl bg-red-500/10 border border-red-500/20 p-6">
                     <p className="text-red-400 text-sm">
                         Something went wrong while loading analytics.
@@ -56,7 +68,7 @@ export default function Analytics() {
     if (!analytics) {
         return (
             <div className="px-6 md:px-20 py-10">
-                <h2 className="text-2xl font-bold mb-6">Analytics</h2>
+                <h2 className="text-3xl font-bold text-white mb-6">Analytics</h2>
                 <div className="rounded-2xl bg-white/5 backdrop-blur-md border p-6">
                     <p className="text-white/60 text-sm">
                         No analytics data available yet.
@@ -84,7 +96,6 @@ export default function Analytics() {
         genres_perc,
         uniqueDevs,
         uniquePubs,
-        allYears,
         max_year,
         years_perc,
         gamesPerDecade
@@ -99,7 +110,26 @@ export default function Analytics() {
 
     return (
         <div className="px-6 md:px-20 py-10">
-            <h2 className="text-2xl font-bold mb-6">Analytics</h2>
+            <h2 className="text-3xl font-bold text-white mb-6">Analytics</h2>
+            <div className="rounded-xl border border-white/10 bg-white/5 p-5 hover:bg-white/10 transition-colors mb-10">
+                <p className="text-sm text-white/60 mb-1">
+                    Recently Added
+                </p>
+
+                {mostRecentGame ? (
+                    <>
+                        <p className="text-3xl font-bold text-white">
+                            {mostRecentGame.title}
+                        </p>
+                        <p className="mt-1 text-sm text-white/50">
+                            Developer(s): {mostRecentGame.developer} · Release Date: {mostRecentGame.release_date}
+                        </p>
+                    </>
+                ) : (
+                    <p className="text-white/50">No games yet</p>
+                )}
+            </div>
+
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-4 mb-10">
                 <SummaryCard 
                     label="Total Games"
