@@ -5,7 +5,7 @@ Hello! This is my latest personal project, **SeanVGO v2**! This is an attempt at
 I *could* have just used many of the organizers that are already out there, but I figred why not use my engineering skills and make my own? In 2024 that's what I did. Since launching v1, I have learned so much more about full stack development and web design, so here is v2!
 
 ## How to Run This
-This is currently deployed at [https://seanvgo-v2.vercel.app/login](https://seanvgo-v2.vercel.app/login). Please use the **Demo User** credentials below to login.
+This is currently deployed at https://seanvgo-v2.vercel.app/login. Please use the **Demo User** credentials below to login.
 
 ## Demo User
 **Email:** svgo_demo@seanaramirez.dev\
